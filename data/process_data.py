@@ -22,13 +22,19 @@ def clean_data(df):
     
     #convert values to binary
     for column in categories:
-    # set each value to be the last character of the string
+        # set each value to be the last character of the string
         categories[column] = categories[column].str[-1]
+        # convert to numeric
         categories[column] = pd.to_numeric(categories[column])
+        
+    #replace 2s in related column with 1s - probably dodgy data
+    categories['related'] = categories['related'].map(lambda x: 1 if x==2 else x)
+        
     
     #replace original column with separate binary columns
     df.drop('categories',axis =1,inplace=True)
     df = pd.concat([df,categories],axis=1)
+    
 
     #drop duplicates
     df = df.drop_duplicates()
